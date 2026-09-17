@@ -21,8 +21,3 @@ seed_dashboard_demo.py
 # Frontend example, unrelated to the FastAPI deployment.
 src/
 node_modules/
-
-# Not installed for this deployment - OCR runs in a subprocess and degrades
-# to a clean per-request error if unavailable, rather than the app failing
-# to boot; see ocr/extract.py.
-requirements-ocr.txt

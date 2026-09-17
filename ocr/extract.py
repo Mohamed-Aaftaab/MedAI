@@ -1,11 +1,25 @@
 """Local-only image/PDF recognition; isolated worker prevents outbound sockets."""
 import json
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 MAX_BYTES = 10 * 1024 * 1024
+
+
+def _subprocess_env():
+    # Some hosts (e.g. Vercel's Python runtime) resolve dependencies by
+    # mutating the parent's in-memory sys.path rather than a real venv
+    # activation or PYTHONPATH env var, so a spawned child starts with a
+    # fresh sys.path and can't find packages the parent can see just fine.
+    # Propagate the parent's resolved path explicitly so the child matches.
+    env = os.environ.copy()
+    extra = os.pathsep.join(sys.path)
+    existing = env.get('PYTHONPATH', '')
+    env['PYTHONPATH'] = f'{extra}{os.pathsep}{existing}' if existing else extra
+    return env
 
 
 def extract(data: bytes):
@@ -18,15 +32,32 @@ def extract(data: bytes):
         try:
             proc = subprocess.run([sys.executable, '-B', str(Path(__file__).resolve()),
                                    str(source), str(target)], capture_output=True, timeout=90,
+                                  env=_subprocess_env(),
                                   creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
         except subprocess.TimeoutExpired:
             raise ValueError('OCR exceeded 90 seconds. Try one smaller, clearer page.') from None
         if not target.exists():
+            _log_failure('OCR subprocess produced no result file', proc)
             raise ValueError('Local OCR could not start. Install requirements-ocr.txt and check the local engine.')
         result = json.loads(target.read_text(encoding='utf-8'))
         if proc.returncode or 'error' in result:
+            _log_failure(result.get('debug') or 'OCR subprocess reported failure', proc)
             raise ValueError(result.get('error', 'OCR failed.'))
         return result
+
+
+def _log_failure(summary, proc):
+    # The subprocess's own broad except-and-genericize keeps the HTTP-facing
+    # message clean and non-leaky, but that means nobody ever saw *why* it
+    # failed - only that it did. Log server-side so a real fault (missing
+    # native lib, model load failure, etc.) is actually diagnosable.
+    from loguru import logger
+    logger.warning(
+        'Local OCR failed: {} | stdout: {} | stderr: {}',
+        summary,
+        proc.stdout.decode('utf-8', 'replace')[-2000:],
+        proc.stderr.decode('utf-8', 'replace')[-2000:],
+    )
 
 
 def recognize(path):
@@ -92,6 +123,10 @@ if __name__ == '__main__':
     except ValueError as exc:
         output, code = {'error': str(exc)}, 1
     except Exception:
-        output, code = {'error': 'Local OCR failed. Check engine installation or try a clearer, unencrypted file.'}, 1
+        import traceback
+        output, code = {
+            'error': 'Local OCR failed. Check engine installation or try a clearer, unencrypted file.',
+            'debug': traceback.format_exc(),
+        }, 1
     Path(sys.argv[2]).write_text(json.dumps(output), encoding='utf-8')
     sys.exit(code)

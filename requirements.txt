@@ -5,5 +5,19 @@ fastapi>=0.115
 uvicorn[standard]>=0.32
 loguru>=0.7
 psycopg[binary]>=3.2
-pytest>=8.0
-pytest-asyncio>=0.24
+rapidocr==3.9.2
+onnxruntime==1.30.0
+pypdfium2==5.13.0
+Pillow>=12.2,<13
+# rapidocr hard-requires opencv_python (the GUI build, which links libxcb/X11
+# and fails to import on headless hosts like Vercel's Python runtime).
+# opencv-python-headless is API-compatible but a plain PyPI reference under
+# that name doesn't satisfy rapidocr's differently-named requirement, and uv
+# rejects a `name @ url` alias when the wheel's own declared name doesn't
+# match. vendor/ holds that same 5.0.0.93 headless wheel repackaged so its
+# own filename and METADATA genuinely say opencv-python - see
+# scripts/repackage_opencv_headless.py for how it was built and how to
+# rebuild it for a future version bump. Linux-only marker: on Windows/macOS
+# dev machines this is skipped and rapidocr pulls the real opencv-python
+# from PyPI as it always did, which is fine off Vercel's headless runtime.
+opencv-python @ ./vendor/opencv_python-5.0.0.93-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl ; sys_platform == "linux"

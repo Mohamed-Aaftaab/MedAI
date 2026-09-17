@@ -59,7 +59,7 @@ The second one is the real end-to-end proof: the payment landed (`verified: true
 Use Python 3.14. In a virtual environment:
 
 ```text
-python -m pip install -r requirements.txt -r requirements-ocr.txt
+python -m pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 Copy `.env.example` to `.env`. Generate a staff access token with:

@@ -181,14 +181,20 @@ function ConsoleShell({ children }: { children: React.ReactNode }) {
       ],
       { duration: 1850, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" },
     );
-    animation.onfinish = () => setEntered(true);
+    const finish = () => setEntered(true);
+    animation.onfinish = finish;
+    // Web Animations API onfinish can fail to fire (backgrounded tab, reduced
+    // rendering priority, some automation contexts) which would otherwise
+    // leave `main` permanently hidden behind the opening overlay.
+    const fallback = window.setTimeout(finish, 2500);
     const onResize = () => {
       animation.cancel();
-      setEntered(true);
+      finish();
     };
     window.addEventListener("resize", onResize, { once: true });
     return () => {
       animation.cancel();
+      window.clearTimeout(fallback);
       window.removeEventListener("resize", onResize);
     };
   }, []);

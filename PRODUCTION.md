@@ -6,7 +6,7 @@ The production entrypoint is `production:create_app`. It does not register the l
 
 ## Install and configure
 
-Use Python 3.14 in an isolated environment. Install `requirements.txt` and `requirements-ocr.txt`. Run `python verify.py --full` before deployment. OCR tests generate synthetic documents with Pillow's bundled font.
+Use Python 3.14 in an isolated environment. Install `requirements.txt` and `requirements-dev.txt` (the latter adds pytest, needed only to run the test suite - `requirements.txt` alone is what a deployment installs). Run `python verify.py --full` before deployment. OCR tests generate synthetic documents with Pillow's bundled font.
 
 Supply secrets through the host's protected environment, not source control:
 
