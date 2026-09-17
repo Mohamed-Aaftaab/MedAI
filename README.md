@@ -78,7 +78,7 @@ Open `http://127.0.0.1:8000/local/dashboard` and unlock with the staff token. Th
 
 ## Agent Console (`console/`)
 
-A separate Next.js dashboard purpose-built to make the payment→call flow visible — overview stats, a payment ledger with live Etherscan links, per-confirmation detail with a **Pay via KeeperHub** action, and a system-readiness view. It talks to the same backend above through server-side route handlers (no CORS changes, no browser-to-FastAPI calls, no invented endpoints) and stores the operator token in an HTTP-only cookie, never localStorage. No demo data — every number is read from the live backend, and an empty workspace shows genuine zeros rather than a fabricated sample.
+A full operator dashboard for the backend above, not just a payment viewer: patient intake with OCR prescription upload, staff correction and approval of low-confidence readings, reminder scheduling and dispatch, call budget editing, an environment/config facts panel, overview stats, a payment ledger with live Etherscan links, per-confirmation detail with a **Pay via KeeperHub** action, and a system-readiness view. It talks to the same backend above through server-side route handlers (no CORS changes, no browser-to-FastAPI calls, no invented endpoints) and stores the operator token in an HTTP-only cookie, never localStorage. No demo data — every number is read from the live backend, and an empty workspace shows genuine zeros rather than a fabricated sample.
 
 ```text
 cd console

@@ -2711,6 +2711,191 @@ tbody tr:hover {
     height: 33px;
   }
 }
+/* ---- forms: intake, reminders, budget, environment ---- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.form-grid .field-full {
+  grid-column: 1 / -1;
+}
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b6c6aa;
+  font-size: 11px;
+}
+.field input,
+.field select,
+.field textarea {
+  background: #11170f;
+  border: 1px solid #404d35;
+  border-radius: 6px;
+  padding: 11px 12px;
+  width: 100%;
+  color: var(--text);
+  outline-color: var(--green);
+  font: inherit;
+}
+.field input[readonly] {
+  color: var(--muted);
+  background: #0d120b;
+}
+.field textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: #cbd6c1;
+}
+.checkbox-row input {
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  accent-color: var(--green);
+}
+.med-card {
+  background: #12160f;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 14px 0;
+}
+.med-card .form-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+.med-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.med-card-head h3 {
+  margin: 0;
+  font-size: 13px;
+}
+.med-card-head button {
+  font-size: 11px;
+  color: #d69a7c;
+}
+.add-med-button {
+  border: 1px dashed #404d35;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  font-size: 12px;
+  color: #a9baa0;
+  margin-top: 4px;
+}
+.add-med-button:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+.upload-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.upload-row input[type="file"] {
+  flex: 1;
+  min-width: 200px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ocr-preview {
+  margin-top: 16px;
+  background: #12160f;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+.ocr-preview pre {
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 11px;
+  color: #b7c2ad;
+  background: #0d120b;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px 0;
+}
+.config-facts {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+.config-facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+.config-facts > div:first-child {
+  border-top: 0;
+}
+.config-facts dt {
+  color: var(--muted);
+}
+.config-facts dd {
+  margin: 0;
+  color: var(--text);
+}
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.intake-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+.intake-actions .primary {
+  width: auto;
+}
+.intake-page > .quiet-text {
+  display: block;
+  margin-top: 4px;
+}
+.reminder-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+.reminder-card:first-child {
+  border-top: 0;
+}
+.reminder-card h3 {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+.reminder-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 720px) {
+  .form-grid,
+  .med-card .form-grid,
+  .budget-grid {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 390px) {
   .sidebar {
     padding-inline: 10px;

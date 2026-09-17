@@ -18,10 +18,21 @@ export class ApiError extends Error {
     super(message);
   }
 }
-export async function backend<T>(path: string, method = "GET"): Promise<T> {
+export async function backend<T>(
+  path: string,
+  method = "GET",
+  payload?: unknown,
+  binary?: { body: BodyInit; contentType: string },
+): Promise<T> {
   const response = await fetch(`/api/backend/${path}`, {
     method,
     cache: "no-store",
+    headers: binary
+      ? { "Content-Type": binary.contentType }
+      : payload !== undefined
+        ? { "Content-Type": "application/json" }
+        : undefined,
+    body: binary ? binary.body : payload !== undefined ? JSON.stringify(payload) : undefined,
   });
   const body = await response
     .json()
@@ -34,6 +45,14 @@ export async function backend<T>(path: string, method = "GET"): Promise<T> {
       response.status,
     );
   return body;
+}
+export async function backendFile(path: string): Promise<Blob> {
+  const response = await fetch(`/api/backend/${path}`, { cache: "no-store" });
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({ detail: "Request failed." }));
+    throw new ApiError(body.detail || "Request failed.", response.status);
+  }
+  return response.blob();
 }
 
 function useWorkspaceState() {

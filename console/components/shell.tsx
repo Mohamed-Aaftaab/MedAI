@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   AudioLines,
+  BellRing,
   Check,
   CheckCheck,
   ChevronRight,
@@ -17,6 +18,7 @@ import {
   LogOut,
   Radio,
   RefreshCw,
+  ScanText,
   Settings2,
   Wallet,
   X,
@@ -26,10 +28,42 @@ import { useWorkspace, WorkspaceProvider } from "./workspace";
 const routes = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/confirmations", label: "Confirmations", icon: CheckCheck },
+  { href: "/intake", label: "New prescription", icon: ScanText },
+  { href: "/reminders", label: "Reminders", icon: BellRing },
   { href: "/payments", label: "Payments", icon: Wallet },
   { href: "/calls", label: "Call activity", icon: AudioLines },
   { href: "/system", label: "System", icon: Settings2 },
 ];
+const HEADINGS: Record<string, { title: string; subtitle: string }> = {
+  Overview: {
+    title: "Every call. Accounted for.",
+    subtitle: "A live view of your payment-to-call workflow.",
+  },
+  Confirmations: {
+    title: "Prescription confirmations",
+    subtitle: "Review prescriptions and authorize paid confirmation calls.",
+  },
+  "New prescription": {
+    title: "Add a prescription.",
+    subtitle: "Scan, review, and save — no call is placed until you authorize one.",
+  },
+  Reminders: {
+    title: "Nothing is dialled automatically.",
+    subtitle: "Scheduled adherence and escalation calls, dispatched one at a time.",
+  },
+  Payments: {
+    title: "Every payment has a receipt.",
+    subtitle: "Trace each transfer from submission to onchain verification.",
+  },
+  "Call activity": {
+    title: "Conversations that count.",
+    subtitle: "Dispatch status and patient outcomes, directly from MedAI.",
+  },
+  System: {
+    title: "Ready for the next call.",
+    subtitle: "Payment configuration, voice readiness, and the execution flow.",
+  },
+};
 export function Modal({
   children,
   title,
@@ -296,26 +330,12 @@ function ConsoleShell({ children }: { children: React.ReactNode }) {
               <h1>
                 {path.startsWith("/confirmations/")
                   ? "Confirmation details"
-                  : current.label === "Overview"
-                    ? "Every call. Accounted for."
-                    : current.label === "Payments"
-                      ? "Every payment has a receipt."
-                      : current.label === "Call activity"
-                        ? "Conversations that count."
-                        : current.label === "System"
-                          ? "Ready for the next call."
-                          : "Prescription confirmations"}
+                  : HEADINGS[current.label].title}
               </h1>
               <p>
-                {current.label === "Overview"
-                  ? "A live view of your payment-to-call workflow."
-                  : current.label === "Payments"
-                    ? "Trace each transfer from submission to onchain verification."
-                    : current.label === "Call activity"
-                      ? "Dispatch status and patient outcomes, directly from MedAI."
-                      : current.label === "System"
-                        ? "Payment configuration, voice readiness, and the execution flow."
-                        : "Review prescriptions and authorize paid confirmation calls."}
+                {path.startsWith("/confirmations/")
+                  ? "Patient, prescription, payment authorization, and call outcome."
+                  : HEADINGS[current.label].subtitle}
               </p>
             </div>
             <button
