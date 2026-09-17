@@ -1,0 +1,28 @@
+# Secrets - env vars are set in the Vercel dashboard, never bundled.
+.env
+*.env
+
+# Local-only artifacts, not used by the production entrypoint.
+data/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Tests, docs, and the legacy demo/exploration files - none of this ships
+# with the deployed function; production.py never imports them.
+tests/
+skills/prescription-readback/scripts/test_*.py
+DEMO.md
+test_readback_api.py
+test_readback_call.py
+seed_dashboard_demo.py
+
+# Frontend example, unrelated to the FastAPI deployment.
+src/
+node_modules/
+
+# Not installed for this deployment - OCR runs in a subprocess and degrades
+# to a clean per-request error if unavailable, rather than the app failing
+# to boot; see ocr/extract.py.
+requirements-ocr.txt
