@@ -98,7 +98,9 @@ async def pay_and_call(key: str):
     except ValueError as exc:
         raise HTTPException(503, str(exc)) from None
     if not dry_run.get("success") or dry_run.get("wouldRevert"):
-        raise HTTPException(502, {"detail": "KeeperHub simulation failed; nothing was broadcast", "keeperhub": dry_run})
+        reason = dry_run.get("error") or dry_run.get("revertReason") or "simulation reported it would revert"
+        logger.warning("KeeperHub simulation for confirmation {} would revert: {}", key, dry_run)
+        raise HTTPException(502, f"KeeperHub simulation failed; nothing was broadcast ({reason})")
 
     try:
         broadcast = await client.transfer(recipient, amount, chain_id=chain_id, idempotency_key=idempotency_key)
@@ -109,8 +111,7 @@ async def pay_and_call(key: str):
     if broadcast.get("status_code", 500) >= 400 or not execution_id:
         service.record_payment(key, None)
         logger.warning("KeeperHub transfer for confirmation {} had no executionId: {}", key, broadcast)
-        raise HTTPException(502, {"detail": "KeeperHub broadcast outcome uncertain; do not re-pay without reconciling",
-                                   "keeperhub": broadcast})
+        raise HTTPException(502, "KeeperHub broadcast outcome uncertain; do not re-pay without reconciling")
 
     doc = service.record_payment(key, {
         "execution_id": execution_id, "chain_id": chain_id,
