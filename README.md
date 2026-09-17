@@ -76,6 +76,19 @@ python -m uvicorn app:app --host 127.0.0.1 --port 8000 --no-access-log
 
 Open `http://127.0.0.1:8000/local/dashboard` and unlock with the staff token. The token stays in browser memory; reload or lock requires authentication again.
 
+## Agent Console (`console/`)
+
+A separate Next.js dashboard purpose-built to make the payment→call flow visible — overview stats, a payment ledger with live Etherscan links, per-confirmation detail with a **Pay via KeeperHub** action, and a system-readiness view. It talks to the same backend above through server-side route handlers (no CORS changes, no browser-to-FastAPI calls, no invented endpoints) and stores the operator token in an HTTP-only cookie, never localStorage. No demo data — every number is read from the live backend, and an empty workspace shows genuine zeros rather than a fabricated sample.
+
+```text
+cd console
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Open `http://127.0.0.1:3000` with the backend above already running. See `console/README.md` for the full page list and validation steps (`npm run typecheck`, `npm run build`, `node tests/proxy.mjs`).
+
 ## The confirmation call workflow
 
 1. Add or select a patient and record their consent and preferred language.
