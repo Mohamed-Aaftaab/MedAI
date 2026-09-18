@@ -4,7 +4,9 @@
 
 Local prescription OCR, staff review, a durable per-tenant workflow engine, and an AI voice-call layer sit underneath the payment gate: pay first, then call, with both steps independently verifiable — onchain for the payment, via the call provider's own API for the conversation.
 
-**Status:** two independently-verified Sepolia transactions executed through KeeperHub, one of them via a full, real, end-to-end pay-then-call run — payment landed, call placed, patient reached, outcome captured. This is a hackathon application, not a clinically validated medical system, and not investment or medical advice.
+**Status:** multiple independently-verified Sepolia transactions executed through KeeperHub, several via a full, real, end-to-end pay-then-call run — payment landed, call placed, patient reached, outcome captured. This is a hackathon application, not a clinically validated medical system, and not investment or medical advice.
+
+**Live**: [medai-console.vercel.app](https://medai-console.vercel.app) (Agent Console) · [medai-calle.vercel.app](https://medai-calle.vercel.app) (backend API)
 
 ## How it works
 

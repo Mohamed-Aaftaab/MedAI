@@ -1,5 +1,7 @@
 # MedAI — Agent Console
 
+**Live**: [medai-console.vercel.app](https://medai-console.vercel.app)
+
 A standalone Next.js App Router / React / TypeScript operator dashboard for the existing MedAI FastAPI backend, with full feature parity to the original `/local/dashboard`: patient intake, OCR prescription upload, staff correction/approval, reminder scheduling and dispatch, KeeperHub payment and call dispatch, and system configuration. The opening animation presents MedAI in the center, moves it into the sidebar, then reveals the workspace. Shared layout navigation preserves the workspace connection across pages, with separate motion treatments for each section and reduced-motion support.
 
 ## Run locally
