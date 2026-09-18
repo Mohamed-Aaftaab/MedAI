@@ -150,3 +150,7 @@ The production entrypoint `production:create_app` excludes legacy demo routes an
 - Webhooks (both CALL-E's and KeeperHub's) use secret per-call URL capabilities, not provider signatures. Keep callback paths out of access logs.
 - `ocr/main.py` and historical demo modules contain labelled offline fixtures. They are not part of the real upload path; demo endpoints are disabled by default.
 - This is testnet money and a testnet phone budget. Nothing here should be pointed at mainnet or production call volume without a separate review.
+
+## License
+
+[MIT](LICENSE)
