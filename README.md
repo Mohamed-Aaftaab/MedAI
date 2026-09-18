@@ -1,6 +1,6 @@
 # MedAI
 
-**Turns a medication-confirmation call into an onchain-paid action.** MedAI reviews a prescription, confirms it with the patient over a real AI voice call, and pays for that call onchain through [KeeperHub](https://docs.keeperhub.com/) before it ever goes out — simulated, broadcast, and independently verified on Sepolia. Built for [KeeperHub's Agent Economy Hackathon](https://dorahacks.io/hackathon/agent-economy/detail).
+**Integrates [KeeperHub](https://docs.keeperhub.com/) as the payment execution layer for [CALL-E](https://heycall-e.com), a live AI voice-calling platform.** No confirmation call goes out until KeeperHub simulates the transfer, broadcasts it on Sepolia, and independently verifies the receipt — the payment is what authorizes CALL-E to dial, not a separate decision the app could get wrong. MedAI is the real use case built on top: a medication-confirmation workflow that turns every automated call into an onchain-paid, independently-verifiable action. Built for [KeeperHub's Agent Economy Hackathon](https://dorahacks.io/hackathon/agent-economy/detail).
 
 Local prescription OCR, staff review, a durable per-tenant workflow engine, and an AI voice-call layer sit underneath the payment gate: pay first, then call, with both steps independently verifiable — onchain for the payment, via the call provider's own API for the conversation.
 
@@ -46,8 +46,10 @@ The confirmation step is deliberately strict: it only auto-approves an exact mat
 |---|---|---|
 | Isolated payment check | [`0xdf122dc3...1133b`](https://sepolia.etherscan.io/tx/0xdf122dc383b189316572ef1648b7c0112ada45b707ac8dc55ca5d4434a71133b) | 11721593 |
 | Full `pay → call` run, through `/campaigns/{key}/pay` | [`0x160e959a...9894b`](https://sepolia.etherscan.io/tx/0x160e959ac803001fcf21c9ad021d926a7f8e59ef00431d0d09894b188d0d01e5) | 11721723 |
+| Full `pay → call` run, production deployment | [`0xbd6e33a9...4a0d84d1`](https://sepolia.etherscan.io/tx/0xbd6e33a98953b8a3db62c5b0efc42279f269dc65b5f7f20b280114754a0d84d1) | 11723854 |
+| Full `pay → call` run, two medications, both confirmed | [`0x8dff73d1...39014`](https://sepolia.etherscan.io/tx/0x8dff73d121c1a3ec683f7f9f6f2c3ca795c0eea3926cf045334370d847239014) | 11725470 |
 
-The second one is the real end-to-end proof: the payment landed (`verified: true`, `receiptStatus: success`), CALL-E placed a real call that reached the patient, and the structured result was captured and reconciled — full transcript-derived outcome in `tests/test_campaigns.py`'s equivalent live run, not a mock.
+These aren't a single lucky run: four independent Sepolia transactions across different sessions and patients, three of them full end-to-end pay-then-call cycles. Each one: the payment landed (`verified: true`, `receiptStatus: success`), CALL-E placed a real call that reached the patient, and the structured result was captured and reconciled — real transcript-derived outcomes, not a mock. `tests/test_campaigns.py` covers the equivalent flow offline.
 
 **Reliability, not just a happy path:**
 - Every broadcast carries an `Idempotency-Key` derived from `call_id | chainId | recipient | amount`, so a retried request replays the original result instead of double-spending.
