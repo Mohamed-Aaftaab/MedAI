@@ -8,6 +8,8 @@ Local prescription OCR, staff review, a durable per-tenant workflow engine, and 
 
 **Live**: [medai-console.vercel.app](https://medai-console.vercel.app) (Agent Console) · [medai-calle.vercel.app](https://medai-calle.vercel.app) (backend API)
 
+**Demo video**: [youtu.be/DJv4o66jyGg](https://youtu.be/DJv4o66jyGg)
+
 ## How it works
 
 ```
