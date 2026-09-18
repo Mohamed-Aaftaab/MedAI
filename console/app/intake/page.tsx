@@ -79,7 +79,6 @@ export default function Intake() {
     setScan(null);
     setOcrChecked(false);
     if (sourceId.startsWith("ocr-")) setSourceId("");
-    if (fileInput.current) fileInput.current.value = "";
   }
 
   async function extract() {
